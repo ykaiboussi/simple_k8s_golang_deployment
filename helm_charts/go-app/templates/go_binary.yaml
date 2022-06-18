@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "deployment.fullname" . }}
+  namespace: simple-go-app
+  labels:
+    {{- include "deployment.labels" . | nindent 4 }}
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      {{- include "deployment.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "deployment.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: simple-go-app
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        command: [ "/bin/sh", "-c", "--" ]
+        args: [ "while true; do sleep 30; done;" ]
